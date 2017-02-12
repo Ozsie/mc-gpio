@@ -91,6 +91,11 @@ var write = function(pin, value, callback) {
   });
 };
 
+//catches uncaught exceptions
+process.on('uncaughtException',  (err) => {
+  winston.error('Caught exception', err);
+});
+
 module.exports = {
   openPin: openPin,
   openPinOut: openPinOut,
