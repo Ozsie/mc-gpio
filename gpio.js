@@ -1,6 +1,11 @@
 var fs = require('fs');
 var settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
 var winston = require('winston');
+
+if (!fs.existsSync(settings.logs.directory)) {
+  fs.mkdir(settings.logs.directory);
+}
+
 var logger = new (winston.Logger)({
   transports: [
     new (winston.transports.Console)(),
@@ -25,7 +30,7 @@ var openPin = function(pin, direction, callback) {
       }
     });
   } else {
-    logger.error("GPIO pin " + pin + " does not exist at '" + settings.gpio.path + "gpio" + pin + "'");
+    logger.error("GPIO pin " + pin + " already exist at '" + settings.gpio.path + "gpio" + pin + "'");
     setPinDirection(pin, direction, callback);
   }
 };
