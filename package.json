@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Ozsie/mashControl.git"
+    "url": "git+https://github.com/Ozsie/mc-gpio.git"
   },
   "keywords": [
     "gpio",
@@ -19,9 +19,9 @@
   "author": "Oscar Djupfeldt",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Ozsie/mashControl/issues"
+    "url": "https://github.com/Ozsie/mc-gpio/issues"
   },
-  "homepage": "https://github.com/Ozsie/mashControl#readme",
+  "homepage": "https://github.com/Ozsie/mc-gpio#readme",
   "dependencies": {
     "jshint": "2.9.4",
     "winston": "2.3.1",
