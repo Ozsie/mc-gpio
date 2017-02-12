@@ -25,7 +25,7 @@ var openPin = function(pin, direction, callback) {
       }
     });
   } else {
-    logger.error("GPIO pin " + pin + " does not exist");
+    logger.error("GPIO pin " + pin + " does not exist at '" + settings.gpio.path + "gpio" + pin + "'");
     setPinDirection(pin, direction, callback);
   }
 };
