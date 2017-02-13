@@ -1,5 +1,18 @@
 var fs = require('fs');
-var settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
+var settings;
+try {
+  settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
+} catch (err) {
+  settings = {
+    gpio: {
+      path: "/sys/class/gpio/"
+    },
+    logs: {
+      directory: "./logs"
+    }
+  };
+}
+
 var winston = require('winston');
 
 if (!fs.existsSync(settings.logs.directory)) {
