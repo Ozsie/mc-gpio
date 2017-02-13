@@ -4,6 +4,8 @@
   "description": "RaspberryPI gpio lib",
   "main": "gpio.js",
   "scripts": {
+    "publish": "git tag -a v$npm_package_version -m 'tag version v$npm_package_version'",
+    "postpublish": "git push --tags",
     "pretest": "jshint gpio.js",
     "test": "mocha test --recursive"
   },
