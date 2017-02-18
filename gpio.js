@@ -1,19 +1,14 @@
 var fs = require('fs');
+var winston = require('winston');
 var settings;
 try {
   settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
 } catch (err) {
   settings = {
-    gpio: {
-      path: "/sys/class/gpio/"
-    },
-    logs: {
-      directory: "./logs"
-    }
+    gpio: { path: "/sys/class/gpio/" },
+    logs: { directory: "./logs" }
   };
 }
-
-var winston = require('winston');
 
 if (!fs.existsSync(settings.logs.directory)) {
   fs.mkdir(settings.logs.directory);
@@ -48,6 +43,19 @@ var openPin = function(pin, direction, callback) {
   }
 };
 
+var openPinSync = function(pin, direction) {
+  try {
+    logger.info("Opening pin " + pin + " as " + direction);
+    if (!fs.existsSync(settings.gpio.path + "gpio" + pin)) {
+      fs.writeFileSync(settings.gpio.path + "export", pin);
+    }
+    setPinDirectionSync(pin, direction);
+  } catch (err) {
+    winston.error("Could not open pin " + pin, err);
+    throw new Error("Could not open pin " + pin);
+  }
+};
+
 var setPinDirection = function(pin, direction, callback) {
   if (!callback || typeof callback !== "function") {
     throw new Error("Callback function required");
@@ -64,12 +72,25 @@ var setPinDirection = function(pin, direction, callback) {
   });
 };
 
+var setPinDirectionSync = function(pin, direction) {
+  fs.writeFileSync(settings.gpio.path + "gpio" + pin + "/direction", direction, "utf8");
+  logger.info("Pin " + pin + " open");
+};
+
 var openPinOut = function(pin, callback) {
     openPin(pin, "out", callback);
 };
 
 var openPinIn = function(pin, callback) {
     openPin(pin, "in", callback);
+};
+
+var openPinOutSync = function(pin) {
+    openPinSync(pin, "out");
+};
+
+var openPinInSync = function(pin) {
+    openPinSync(pin, "in");
 };
 
 var closePin = function(pin, callback) {
@@ -86,6 +107,16 @@ var closePin = function(pin, callback) {
       callback(undefined, "closed");
     }
   });
+};
+
+var closePinSync = function(pin) {
+  try {
+    fs.writeFileSync(settings.gpio.path + "unexport", pin);
+    logger.info("Pin " + pin + " closed");
+  } catch(err) {
+    winston.error("Could not close pin " + pin, err);
+    throw new Error("Could not close pin " + pin);
+  }
 };
 
 var writeSync = function(pin, value) {
@@ -120,7 +151,14 @@ module.exports = {
   openPinIn: openPinIn,
   closePin: closePin,
   setPinDirection: setPinDirection,
-  writeSync: writeSync,
   write: write,
+  sync: {
+    openPin: openPinSync,
+    openPinOut: openPinOutSync,
+    openPinIn: openPinInSync,
+    closePin: closePinSync,
+    setPinDirection: setPinDirectionSync,
+    write: writeSync
+  },
   settings: settings.gpio
 };

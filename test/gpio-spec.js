@@ -57,7 +57,7 @@ describe('GPIO', function() {
   });
 
   it('openPin should throw error when no callback is provided', function() {
-    expect(gpio.openPin.bind(0, "out")).to.throw("Callback function required");
+    expect(gpio.openPin.bind(undefined, 0, "out")).to.throw("Callback function required");
   });
 
   it('closePin should return error when gpio file is not available', function(done) {
@@ -70,6 +70,6 @@ describe('GPIO', function() {
   });
 
   it('closePin should throw error when no callback is provided', function() {
-    expect(gpio.closePin.bind(0)).to.throw("Callback function required");
+    expect(gpio.closePin.bind(undefined, 0)).to.throw("Callback function required");
   });
 });
