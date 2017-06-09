@@ -1,1 +1,4 @@
 .travis.yml
+yarn-error.log
+yarn.lock
+.gitignore
